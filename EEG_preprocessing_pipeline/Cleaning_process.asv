@@ -77,9 +77,8 @@ reject_array = tmprej(:,[3 4])
 % 1076 - 1344
 % 1636 - 1838
 % 1851 - 2375
-breaks = [310 448; 754 774; 1076 1344; 1636 1838; 1851 2375];
+breaks = [310 448; 754 774; 1076 1344; 1636 1838; 1851 2375]
 reject_array = cat(1, reject_array, breaks)
-sorted = sort(reject_array)
 
 save([subjectID '_times_to_reject.mat'],'reject_array')
 eeg_cnt = eeg_checkset(eeg_cnt,'makeur');
