@@ -170,10 +170,6 @@ class VibrationController():
 
         elif mode == "oddball":
 
-            # This is the version for a high frequency oddball
-            #self.belt_controller.pulseAtPositions(vibromotors, 20, 20, trigger_oddball1, channel_idx=1, intensity=80)
-            #time.sleep(0.8)
-
             # Vibrate a first time (trigger is set in classicbelt function)
             self.belt_controller.vibrateAtPositions(vibromotors, trigger_oddball1, 1, 100)
             time.sleep(0.8)
