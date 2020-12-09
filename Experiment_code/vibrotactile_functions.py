@@ -179,17 +179,6 @@ class VibrationController():
             time.sleep(0.8)
             self.belt_controller.stopVibration()
 
-            # Trigger break
-            #classicbelt.p.setData(oddball_break)
-            #core.wait(0.01)
-            #classicbelt.p.setData(0)
-            #time.sleep(0.10)
-
-            # Vibrate a second time (trigger is set in classicbelt function)
-            #self.belt_controller.vibrateAtPositions(vibromotors, trigger_oddball2, 1, 80)
-            #time.sleep(0.35)
-            #self.belt_controller.stopVibration()
-
         # Trigger break
         classicbelt.p.setData(trigger_break)
         core.wait(0.01)
