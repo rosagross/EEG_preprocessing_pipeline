@@ -9,7 +9,7 @@ downsampled_data_path = "C:\Users\rosah\Desktop\Rosas Unikrams\6th semester from
                         + "Parkinson study project\Thesis things\EEG_feelSpace\" ...
                         + "EEG_data_feelSpace\CNT_DownsampledAndFiltered";
 cd(downsampled_data_path);
-subjectID = '17'; % Choose subject data that you want to clean
+subjectID = '18'; % Choose subject data that you want to clean
 filename = ['ID' subjectID '.set'];
 
 % Load existing data
