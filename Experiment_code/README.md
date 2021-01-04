@@ -43,7 +43,3 @@ We will use: (body part, real belt label, variable integer)
 - waist left, 8, 8
 - waist right, 7, 9
 - ankle, 4, 10
-
-###TODO
-- call fixation cross function (not directly in trial!)
-- document our trial duration and other parameters 
