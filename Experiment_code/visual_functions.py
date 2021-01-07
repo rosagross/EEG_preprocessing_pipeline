@@ -12,7 +12,7 @@ import numpy as np
 import csv
 from pybelt import classicbelt # we need this to set the trigger
 
-class ControlScreen():
+class ScreenController():
 
     def __init__(self, color_standard, color_oddball, trial_break):
 

@@ -30,7 +30,7 @@ class Experiment():
         self.belt = vibrotactile_functions.VibrationController(parameter.ankle_vibromotor, parameter.wrist_vibromotor,
                                                      parameter.waist_vibromotor_left, parameter.waist_vibromotor_right,
                                                      parameter.trial_break)
-        self.screen = visual_functions.ControlScreen(parameter.color_standard, parameter.color_oddball, parameter.trial_break)
+        self.screen = visual_functions.ScreenController(parameter.color_standard, parameter.color_oddball, parameter.trial_break)
 
         # get the parameter from external file
         self.trials_per_block = parameter.trials

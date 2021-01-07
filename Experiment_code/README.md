@@ -3,9 +3,9 @@ The folder 'EEG_experiment' contains all files necessary for executing the exper
 
 ### Structure of files
 - Parameter
-- Functions
-- Experiment
-- Trigger (not implemented yet)
+- Functions vibrotactile
+- Functions visual
+- Main experiment
 
 #### Parameter
 Parameters can be set by the experimenter.
@@ -13,7 +13,7 @@ The parameters are:
 - Nr. of trials per block
 - Nr. of identical blocks (we have 4 different oddball blocks and can choose how often we want to repeat the identical blocks as minimum)
 - Intensity of oddball and standard stimulus in the vibrotactile condition
-- Colour of standard and oddball stimulus in visual oddball task
+- Colour of standard and oddball stimulus in the visual oddball condition
 - Duration of break between trials
 - Duration of each trial
 
