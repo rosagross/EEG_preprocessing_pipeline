@@ -8,6 +8,7 @@ trials = 200
 identical_blocks = 2
 oddball_ratio = 0.3
 trial_break = 0.7
+trial_length = 0.8
 
 # Parameters for the visual oddball task
 color_standard = "cyan"
@@ -19,8 +20,8 @@ wrist_vibromotor = 7
 waist_vibromotor_left =  9
 waist_vibromotor_right = 8
 
-# "Translation" to the real label on the belt:
-# variable above:real label
+# "Translation" to the attached labels on the belt:
+# variable above:attached label
 # 12:2
 # 7:9
 # 9:7

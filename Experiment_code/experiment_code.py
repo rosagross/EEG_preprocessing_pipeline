@@ -29,8 +29,9 @@ class Experiment():
         # get the vibrotactile functions
         self.belt = vibrotactile_functions.VibrationController(parameter.ankle_vibromotor, parameter.wrist_vibromotor,
                                                      parameter.waist_vibromotor_left, parameter.waist_vibromotor_right,
-                                                     parameter.trial_break)
-        self.screen = visual_functions.ScreenController(parameter.color_standard, parameter.color_oddball, parameter.trial_break)
+                                                     parameter.trial_break, parameter.trial_length)
+        self.screen = visual_functions.ScreenController(parameter.color_standard, parameter.color_oddball,
+                                                        parameter.trial_break, parameter.trial_length)
 
         # get the parameter from external file
         self.trials_per_block = parameter.trials
@@ -96,7 +97,7 @@ class Experiment():
 
 
 def main():
-    """ Starts the test application. """
+    """ Starts the experiment. """
     try:
         experiment = Experiment()
         experiment.start()

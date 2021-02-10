@@ -1,25 +1,65 @@
 """
 This file includes functions for the visual oddball part that used in the Experiment class.
 - set_up_screen: sets up the screen where the fixation cross and later the stimulus is dispayed
-- visual_oddball:
+- show_instructions : Shows instructions in the beginning and for every fingertapping task
+- show_ready_screen :
+- start_fingertapping_screen
+- show_thank_you
+- show_fixation_cross
+- visual_oddball :
 """
 
 from psychopy import visual, event, data, logging, core
 import random, datetime, time
 import parameter
-import parallel
 import numpy as np
 import csv
 from pybelt import classicbelt # we need this to set the trigger
 
 class ScreenController():
+"""
 
-    def __init__(self, color_standard, color_oddball, trial_break):
+Parameters
+---------
+color_standard : str
+    The color of the frequently occuring circle stimulus.
+color_oddball : str
+    The color of the infrequently occuring circle stimulus.
+trial_break : float
+    Defines the length of the break between stimuli presentations in seconds.
+trial_length : float
+    Defines the length of the trial (each stimulus presentation) in seconds.
+
+Attributes
+----------
+color_standard : str
+    Stores color of the frequently occuring circle stimulus.
+color_oddball : str
+    Stores color of the infrequently occuring circle stimulus.
+trial_break : float
+    Stores the length of the break between stimuli presentations in seconds.
+trial_length : float
+    Stores the length of the trial (each stimulus presentation) in seconds.
+participant_ID : int
+    Stores the ID of the current participant.
+fingertapping_file_name : str
+    Stores the name of the file that saves the fingertapping data.
+win : Window (object of psychoPy library)
+    Represents the window that is monitoring stimuli, text and fixation cross.
+globalClock : Clock (object of core package)
+    Stores the exact current time. Used for measuring reaction times in fingertapping.
+
+Visual stimuli and text that will be presented during the experiment have to be
+defined in the constructor directly.
+"""
+
+    def __init__(self, color_standard, color_oddball, trial_break, trial_length):
 
         # set the color of the visual stimuli
         self.color_oddball = color_oddball
         self.color_standard = color_standard
         self.trial_break = trial_break
+        self.trial_length = trial_length
 
         # Used for saving fingertapping data into file
         self.participant_ID = parameter.participant_ID
@@ -27,11 +67,11 @@ class ScreenController():
 
         # set window
         self.win = visual.Window([1920, 1080], units='height', winType='pyglet', fullscr=True)
-        # set global quit key
-        #event.globalKeys.remove(key='escape')
-        #event.globalKeys.add(key='escape', func=core.quit)
         self.globalClock = core.Clock()
 
+        #------------------------
+        # Visual stimuli and text
+        #------------------------
         self.instruction = visual.TextStim(self.win,
                 text='Welcome to our experiment! \nPlease press any button if you are ready to start\n' \
                      'Please focus on the fixation cross in the middle of the screen.', height=0.05)
@@ -43,7 +83,6 @@ class ScreenController():
                  text='Stop finger tapping', height=0.05)
 
         self.digit_sequence = [1, 2, 3, 4]
-
 
         self.ready_screen = visual.TextStim(self.win,
                  text='Please press any key if you are ready to continue the experiment. Please fixate on the fixation cross!', height=0.05)
@@ -62,6 +101,7 @@ class ScreenController():
                 lineColor='black'
             )
 
+        # initialize circle stimulus (colour doesn't matter here)
         self.circle_stim = visual.Circle(self.win,
                 radius = 0.07,
                 fillColor = 'cyan',
@@ -76,7 +116,6 @@ class ScreenController():
         self.win.flip()
         event.waitKeys()
 
-
     def show_ready_screen(self):
         """
         Is shown between trials to check if participant is ready for the next block.
@@ -87,15 +126,17 @@ class ScreenController():
         classicbelt.p.setData(21)
         core.wait(0.01)
         classicbelt.p.setData(0)
-        # Save the trigger information in a log file
-
-
         event.waitKeys()
 
     def start_fingertapping_screen(self, ft_round):
         """
         Set up the screen for the experiment and show instructions.
-        ft_round: Tells us often (out of 4) we did the fingertapping task.
+
+        Parameters
+        ----------
+        ft_round : int
+            Tells us often (out of 4) we did the fingertapping task. This is to
+            save the information in the fingertapping data file.
         """
         self.fingertapping_instruction.draw()
         self.win.flip()
@@ -146,7 +187,6 @@ class ScreenController():
                                      header[3] : ''.join([str(j) for j in new_sequence]),
                                      header[4] : self.participant_ID})
 
-
         self.fingertapping_end.draw()
         self.win.flip()
         core.wait(3)
@@ -154,7 +194,6 @@ class ScreenController():
         classicbelt.p.setData(19)
         core.wait(0.01)
         classicbelt.p.setData(0)
-
 
         self.pause_screen.draw()
         self.win.flip()
@@ -169,7 +208,7 @@ class ScreenController():
     def show_thank_you(self):
         """
         Show the last window for the experiment, where we thank the participants.
-        Then, end the experiment.
+        After that, end the experiment.
         """
         self.thank_you.draw()
         self.win.flip()
@@ -196,8 +235,14 @@ class ScreenController():
 
     def visual_oddball(self, trials, oddball_ratio):
         """
-        Function that runs 200 trials of the visual oddball stimulus.
-        The oddball stimulus is pink and the standard stimulus is cyan.
+        Function that runs the trials of the visual oddball stimulus.
+
+        Parameters
+        ----------
+        trials : int
+            The number of trials in this condition (visual).
+        oddball_ratio : float
+            The frequency of displaying the oddball stimulus.
         """
 
         print('-----------------------------------')
@@ -251,11 +296,10 @@ class ScreenController():
             self.circle_stim.draw()
             self.win.flip()
 
-
             # TRIGGER
             classicbelt.p.setData(trigger_visual)
             core.wait(0.01)
             classicbelt.p.setData(0)
 
             # Show the circle for 800 ms
-            core.wait(0.8)
+            core.wait(trial_length)
