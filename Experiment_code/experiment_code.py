@@ -3,21 +3,14 @@
 # Randomization of trials happens here.
 # Reads in parameters from separate parameter file.
 
-from pybelt import classicbelt
 import serial #@UnusedImport # PySerial for USB connection
 import serial.tools.list_ports
-from pybelt import classicbelt
 import time
-#import parallel
 import random
-import datetime
-from psychopy import visual, event, data, logging, core
+from psychopy import visual, event
 import vibrotactile_functions
 import visual_functions
 import parameter
-
-#event.globalKeys.add(key='escape', func=core.quit)
-#p = parallel.Parallel()
 
 class Experiment():
 
@@ -56,11 +49,11 @@ class Experiment():
         # show instructions on screen
         self.screen.show_instructions()
 
-        # All blocks are running twice.
-        # Block section 1 (all blocks run once, random order)
+        # the functions are stored in a list, to iterate over it in the for-loop
         block_functions = [self.screen.visual_oddball, self.belt.vibrotactile_oddball_waist,
                             self.belt.vibrotactile_oddball_wrist, self.belt.vibrotactile_oddball_ankle]
         count_fingertapping = 0
+
         # Execute all the blocks twice. Before executed a second time,
         # all other blocks should have been run at least once.
         for _ in range(self.repeat_blocks):
@@ -68,7 +61,6 @@ class Experiment():
             # Shuffle blocks
             random.shuffle(block_functions)
             print('Start next block section!')
-
 
             # Start new block
             for i, function in enumerate(block_functions):
@@ -78,8 +70,7 @@ class Experiment():
                 print('Execute block %i out of 4' % (i+1))
                 function(self.trials_per_block, self.oddball_ratio)
 
-                # Do fingertapping task every 4 blocks
-                if (i+2)%2 == 0:
+                if i%2 == 0:
                     print('-----------------------------------')
                     print('-----------FINGER TAPPING----------')
                     print('-----------------------------------\n')
@@ -87,7 +78,6 @@ class Experiment():
                     self.screen.start_fingertapping_screen(count_fingertapping)
 
                 print('')
-
 
         # At the very end of the experiment, disconnect the belt
         self.belt.disconnect_belt()
