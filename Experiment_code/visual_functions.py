@@ -29,6 +29,8 @@ trial_break : float
     Defines the length of the break between stimuli presentations in seconds.
 trial_length : float
     Defines the length of the trial (each stimulus presentation) in seconds.
+visual_trigger : list
+    List of trigger codes for the stimuli in the visual oddball paradigm.
 
 Attributes
 ----------
@@ -40,6 +42,8 @@ trial_break : float
     Stores the length of the break between stimuli presentations in seconds.
 trial_length : float
     Stores the length of the trial (each stimulus presentation) in seconds.
+visual_trigger : list
+    Stores trigger codes for the stimuli in the visual oddball paradigm.
 participant_ID : int
     Stores the ID of the current participant.
 fingertapping_file_name : str
@@ -53,13 +57,14 @@ Visual stimuli and text that will be presented during the experiment have to be
 defined in the constructor directly.
 """
 
-    def __init__(self, color_standard, color_oddball, trial_break, trial_length):
+    def __init__(self, color_standard, color_oddball, trial_break, trial_length, visual_trigger):
 
         # set the color of the visual stimuli
         self.color_oddball = color_oddball
         self.color_standard = color_standard
         self.trial_break = trial_break
         self.trial_length = trial_length
+        self.visual_trigger = visual_trigger
 
         # Used for saving fingertapping data into file
         self.participant_ID = parameter.participant_ID
@@ -204,7 +209,6 @@ defined in the constructor directly.
         event.waitKeys()
 
 
-
     def show_thank_you(self):
         """
         Show the last window for the experiment, where we thank the participants.
@@ -217,6 +221,7 @@ defined in the constructor directly.
         # end the experiment
         self.win.close()
         core.quit()
+
 
     def show_fixation_cross(self):
         """
@@ -259,7 +264,7 @@ defined in the constructor directly.
             self.win.flip()
 
             # TRIGGER
-            classicbelt.p.setData(15)
+            classicbelt.p.setData(self.visual_trigger[2])
             core.wait(0.01)
             classicbelt.p.setData(0)
 
@@ -287,12 +292,10 @@ defined in the constructor directly.
 
 
             if col == "cyan":
-                trigger_visual = 13
+                trigger_visual = self.visual_trigger[1]
             else:
-                trigger_visual = 14
+                trigger_visual = self.visual_trigger[0]
 
-            # Does not work for psychopy 2
-            #self.circle_stim.setColor(col)
             self.circle_stim.draw()
             self.win.flip()
 

@@ -24,12 +24,18 @@ class VibrationController():
     ----------
     ankle_vibomotor : int
         The number of the vibrotactile unit attached to the ankle.
+    ankle_trigger : list
+        List with trigger codes for the ankle condition.
     wrist_vibromotor : int
         The number of the vibrotactile unit attached to the wrist.
+    wrist_trigger : list
+        List with trigger codes for the wrist condition.
     waist_vibromotor_left : int
         The number of the vibrotactile unit attached to the left side of the waist.
     waist_vibromotor_right : int
         The number of the vibrotactile unit attached to the right side of the waist.
+    waist_trigger : list
+        List with trigger codes for the waist condition.
     trial_break : float
         Defines the length of the break between stimuli presentations in seconds.
     trial_length : float
@@ -42,27 +48,36 @@ class VibrationController():
         the pyBelt package.
     ankle_vibomotor : int
         Stores the vibrotactile unit ID for the ankle.
+    ankle_trigger : list
+        Stores trigger codes for the ankle condition.
     wrist_vibromotor : int
         Stores the vibrotactile unit ID for the ankle.
+    wrist_trigger : list
+        Stores trigger codes for the wrist condition.
     waist_vibromotor_left : int
         Stores the vibrotactile unit ID for the left waist.
     waist_vibromotor_right : int
         Stores the vibrotactile unit ID for the right waist.
+    waist_trigger : list
+        Stores trigger codes for the waist condition.
     trial_break : float
         Stores the length of the break between stimuli presentations in seconds.
     trial_length : float
         Stores the length of the trial (stimulus presentation) in seconds.
     """
 
-    def __init__(self, ankle_vibromotor, wrist_vibromotor, waist_vibromotor_left,
-                waist_vibromotor_right, trial_break, trial_length):
+    def __init__(self, ankle_vibromotor, ankle_trigger, wrist_vibromotor, wrist_trigger, waist_vibromotor_left,
+                waist_vibromotor_right, waist_trigger, trial_break, trial_length):
         """Constructor that initializes the belt controller."""
         # Instantiate a belt controller
         self.belt_controller = classicbelt.BeltController(delegate=self)
         self.ankle_vibromotor = ankle_vibromotor
+        self.ankle_trigger = ankle_trigger
         self.wrist_vibromotor = wrist_vibromotor
+        self.wrist_trigger = wrist_trigger
         self.waist_vibromotor_left =  waist_vibromotor_left
         self.waist_vibromotor_right = waist_vibromotor_right
+        self.waist_trigger = waist_trigger
         self.trial_break = trial_break
         self.trial_length = trial_length
 
@@ -114,7 +129,7 @@ class VibrationController():
 
             print('MODE (standard or oddball): ', mode)
 
-            self.start_trial(mode, [self.ankle_vibromotor], 9, 10, 11, 12, 22)
+            self.start_trial(mode, [self.ankle_vibromotor], self.ankle_trigger)
 
             total_trial = np.delete(total_trial, 0)
 
@@ -163,7 +178,7 @@ class VibrationController():
                 mode = "standard"
 
             # Execution of the odd or standard trial.
-            self.start_trial(mode, [self.wrist_vibromotor], 5, 6, 7, 8, 23)
+            self.start_trial(mode, [self.wrist_vibromotor], self.wrist_trigger)
 
             # The currently executed trial is deleted from the trial storing array
             # to keep the correct number of oddball and standard trials.
@@ -183,7 +198,6 @@ class VibrationController():
             A decimal integer indicating the nr. of trials
         oddball_ratio : float
             Indicating the proportion of odd stimuli
-
         """
 
         # Output used as control option for the experimenter.
@@ -207,7 +221,7 @@ class VibrationController():
                 mode = "standard"
                 standard_count += 1
 
-            self.start_trial(mode, [self.waist_vibromotor_left, self.waist_vibromotor_right], 1, 2, 3, 4, 24)
+            self.start_trial(mode, [self.waist_vibromotor_left, self.waist_vibromotor_right], self.waist_trigger)
 
             # The currently executed trial is deleted from the trial storing array
             # to keep the correct number of oddball and standard trials.
@@ -216,9 +230,7 @@ class VibrationController():
             # break between trials
             time.sleep(self.trial_break)
 
-
-
-    def start_trial(self, mode, vibromotors, trigger_oddball, trigger_standard, trigger_break, oddball_break):
+    def start_trial(self, mode, vibromotors, trigger_codes):
         """
         Either an oddball or a standard vibration starts.
 
@@ -228,27 +240,24 @@ class VibrationController():
             "Standard" or "oddball" -> virbation of low or high intensity
         vibromotors : int
             Integer refering to the correct vibrating unit
-        trigger_oddball : int
-            Trigger for the odd stimuli
-        trigger_standard : int
-            Trigger for the standard stimuli
-        trial_break : int
-            Trigger for the break between trials
+        trigger_codes : list
+            Trigger for the stimuli in the respective vibrotactile condition.
+            The order is [oddball, standard, break]
         """
 
         if mode == "standard":
-            self.belt_controller.vibrateAtPositions(vibromotors, trigger_standard, 1, 30)
+            self.belt_controller.vibrateAtPositions(vibromotors, trigger_codes[1], 1, 30)
             time.sleep(self.trial_length)
             self.belt_controller.stopVibration()
 
         elif mode == "oddball":
 
             # Vibrate a first time (trigger is set in classicbelt function)
-            self.belt_controller.vibrateAtPositions(vibromotors, trigger_oddball, 1, 100)
+            self.belt_controller.vibrateAtPositions(vibromotors, trigger_codes[0], 1, 100)
             time.sleep(self.trial_length)
             self.belt_controller.stopVibration()
 
         # Trigger break
-        classicbelt.p.setData(trigger_break)
+        classicbelt.p.setData(trigger_codes[2])
         core.wait(0.01)
         classicbelt.p.setData(0)

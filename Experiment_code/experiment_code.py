@@ -20,11 +20,12 @@ class Experiment():
         print('----------------\n')
 
         # get the vibrotactile functions
-        self.belt = vibrotactile_functions.VibrationController(parameter.ankle_vibromotor, parameter.wrist_vibromotor,
-                                                     parameter.waist_vibromotor_left, parameter.waist_vibromotor_right,
-                                                     parameter.trial_break, parameter.trial_length)
+        self.belt = vibrotactile_functions.VibrationController(parameter.ankle_vibromotor, parameter.ankle_trigger,
+                                                               parameter.wrist_vibromotor, parameter.wrist_trigger,
+                                                               parameter.waist_vibromotor_left, parameter.waist_vibromotor_right,
+                                                               parameter.waist_trigger, parameter.trial_break, parameter.trial_length)
         self.screen = visual_functions.ScreenController(parameter.color_standard, parameter.color_oddball,
-                                                        parameter.trial_break, parameter.trial_length)
+                                                        parameter.trial_break, parameter.trial_length, parameter.visual_trigger)
 
         # get the parameter from external file
         self.trials_per_block = parameter.trials
@@ -39,22 +40,27 @@ class Experiment():
 
     def start(self):
         """Function that starts the experiment"""
-        # initialize belt controller
+        # Initialize belt controller
         self.belt.connect_to_USB()
 
         print('+++++++++++++++++++++++++++++++++++')
         print('          -BELT CONNECTED-         ')
         print('+++++++++++++++++++++++++++++++++++\n')
 
-        # show instructions on screen
+        # Show instructions on screen
         self.screen.show_instructions()
 
-        # the functions are stored in a list, to iterate over it in the for-loop
-        block_functions = [self.screen.visual_oddball, self.belt.vibrotactile_oddball_waist,
-                            self.belt.vibrotactile_oddball_wrist, self.belt.vibrotactile_oddball_ankle]
+        # The functions for each of the 4 block types are stored in a list,
+        # enabling to iterate over and ranodmly execute them in the for-loop
+        block_functions = [self.screen.visual_oddball,
+                           self.belt.vibrotactile_oddball_waist,
+                           self.belt.vibrotactile_oddball_wrist,
+                           self.belt.vibrotactile_oddball_ankle]
+
+        # Keeping track of the fingertapping rounds
         count_fingertapping = 0
 
-        # Execute all the blocks twice. Before executed a second time,
+        # Execute all the blocks twice. Before executing another time,
         # all other blocks should have been run at least once.
         for _ in range(self.repeat_blocks):
 
