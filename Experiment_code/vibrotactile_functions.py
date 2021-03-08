@@ -31,13 +31,13 @@ class VibrationController():
     wrist_trigger : list
         List with trigger codes for the wrist condition.
     waist_vibromotor_left : int
-        The number of the vibrotactile unit attached to the left side of the waist.
+        Number of the vibrotactile unit attached to the left side of the waist.
     waist_vibromotor_right : int
-        The number of the vibrotactile unit attached to the right side of the waist.
+        Number of the vibrotactile unit attached to the right side of the waist.
     waist_trigger : list
         List with trigger codes for the waist condition.
     trial_break : float
-        Defines the length of the break between stimuli presentations in seconds.
+        The length of the break between stimuli presentations in seconds.
     trial_length : float
         Defines the length of the trial (each stimulus presentation) in seconds.
 
@@ -66,8 +66,9 @@ class VibrationController():
         Stores the length of the trial (stimulus presentation) in seconds.
     """
 
-    def __init__(self, ankle_vibromotor, ankle_trigger, wrist_vibromotor, wrist_trigger, waist_vibromotor_left,
-                waist_vibromotor_right, waist_trigger, trial_break, trial_length):
+    def __init__(self, ankle_vibromotor, ankle_trigger, wrist_vibromotor,
+                wrist_trigger, waist_vibromotor_left, waist_vibromotor_right,
+                waist_trigger, trial_break, trial_length):
         """Constructor that initializes the belt controller."""
         # Instantiate a belt controller
         self.belt_controller = classicbelt.BeltController(delegate=self)
